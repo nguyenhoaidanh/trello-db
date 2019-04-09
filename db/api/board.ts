@@ -44,6 +44,15 @@ router.get('/delete/:boardname', (req, res) => {
 
 
 
+//get board by id
+router.get('/:_id', (req, res) => {
+    const {_id}=req.params;
+    (async () => {
+      const board = await BoardModel.find({_id});
+      res.send({status: MESSAGE.QUERY_OK, board});
+    })();
+  });
+
 // api delete by _id
 router.post('/delete', (req, res) => {
     var { _id } = req.body;

@@ -23,6 +23,17 @@ router.get('/delete-all', (req, res) => {
 
 //end API for test ///////////////////////////////
 
+
+
+//get comment by id
+router.get('/:_id', (req, res) => {
+    const {_id}=req.params;
+    (async () => {
+      const comment = await CommentModel.find({_id});
+      res.send({status: MESSAGE.QUERY_OK, comment});
+    })();
+  });
+
 // api delete by _id
 router.post('/delete', (req, res) => {
     var { _id } = req.body;

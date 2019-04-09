@@ -43,6 +43,15 @@ router.get('/delete/:listname', (req, res) => {
 //end API for test ///////////////////////////////
 
 
+//get list by id
+router.get('/:_id', (req, res) => {
+    const {_id}=req.params;
+    (async () => {
+      const list = await ListModel.find({_id});
+      res.send({status: MESSAGE.QUERY_OK, list});
+    })();
+  });
+
 
 // api delete by id
 router.post('/delete', (req, res) => {

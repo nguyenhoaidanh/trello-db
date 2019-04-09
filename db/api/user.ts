@@ -35,6 +35,14 @@ router.get('/delete-all', (req, res) => {
 });
 //////////   end API for test  ////////
 
+//get user by id
+router.get('/:_id', (req, res) => {
+  const {_id}=req.params;
+  (async () => {
+    const user = await UserModel.find({_id},{password:0});
+    res.send({status: MESSAGE.QUERY_OK, user});
+  })();
+});
 
 router.post('/login', (req, res) => {
   const { username, password } = req.body;

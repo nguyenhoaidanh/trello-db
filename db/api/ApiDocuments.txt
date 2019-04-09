@@ -92,6 +92,9 @@
 	nếu chỉ update imageUrl=> đừng bỏ role vào body
         update both of them => push all to body
 
++ get 1 user by _id
+    endpoint: /users/:_id
+    method: GET
 
 ############### api board 
 + add new board
@@ -103,7 +106,6 @@
         members:  ['username1','username2']  hoặc list rỗng []
         background:  không bắt buộc, có thì bỏ vô, không thì đừng bỏ vô body 
      
-
 + delete board by _id :
     endpoint: /boards/delete
     body: _id
@@ -128,6 +130,10 @@
     method : POST
      note: memberName là 1 username
 
++ get 1 board by _id
+    endpoint: /boards/:_id
+    method: GET
+
 ############# api list 
 +add list :
     endpoint: /lists/add
@@ -145,6 +151,10 @@
     body: _id
     method : POST
    
++ get 1 list by _id
+    endpoint: /lists/:_id
+    method: GET   
+
 ################ api card 
 
 +add card :
@@ -196,7 +206,10 @@
     body: _id, newListId
     method : POST
      
- 
+ + get 1 card by _id
+    endpoint: /cards/:_id
+    method: GET 
+
 ############### api comment 
 
 +add comment :
@@ -220,6 +233,9 @@
     body: _id
     method : POST
 
++ get 1 comment by _id
+    endpoint: /comments/:_id
+    method: GET   
 
 #########   api query  ############
 
