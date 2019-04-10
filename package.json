@@ -26,7 +26,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "start": "npm run local",
+    "start": "yarn run local",
     "dev": "cross-env NODE_ENV=development nodemon --exec ts-node -r tsconfig-paths/register index.ts",
     "local": "cross-env NODE_ENV=local nodemon --exec ts-node -r tsconfig-paths/register index.ts",
     "production": "cross-env NODE_ENV=production nodemon --exec ts-node -r tsconfig-paths/register index.ts"
