@@ -1,14 +1,14 @@
 import * as express from 'express';
 import * as mongoose from 'mongoose';
 
-import * as MESSAGE from '@utils/return_message';
+import * as MESSAGE from '@/utils/return_message';
 import {
   BoardModel,
   CardModel,
   CommentModel,
   ListModel,
   UserModel
-} from '@models';
+} from '@/models';
 
 const router = express.Router();
 var ObjectId = mongoose.Types.ObjectId;

@@ -1,7 +1,7 @@
 import { prop, Ref, Typegoose, ModelType, InstanceType } from 'typegoose';
 
-import User from '@models/User';
-import Card from '@models/Card';
+import User from '@/models/User';
+import Card from '@/models/Card';
 
 export default class Comment extends Typegoose {
   @prop({ required: true })

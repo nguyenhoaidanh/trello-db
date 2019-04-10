@@ -1,5 +1,6 @@
 import * as mongoose from 'mongoose';
-import { MONGODB_URI, MONGODB_OPTION } from '@config';
+
+import { MONGODB_URI, MONGODB_OPTION } from '@/config';
 
 mongoose.set('useCreateIndex', true);
 (mongoose as any).Promise = Promise;

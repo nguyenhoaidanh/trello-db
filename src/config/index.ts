@@ -6,6 +6,11 @@ require('dotenv').config({
   path: `.env.${NODE_ENV}`
 });
 
-export * from '@config/database';
-export * from '@config/server';
+if (NODE_ENV === 'production') {
+  // manual setup on production,
+  // I don't know???
+}
+
+export * from '@/config/database';
+export * from '@/config/server';
 export { NODE_ENV };

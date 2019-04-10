@@ -1,7 +1,7 @@
 import * as express from 'express';
 
-import * as MESSAGE from '@utils/return_message';
-import { CommentModel } from '@models';
+import * as MESSAGE from '@/utils/return_message';
+import { CommentModel } from '@/models';
 
 const router = express.Router();
 

@@ -1,7 +1,7 @@
 import { prop, Ref, Typegoose, ModelType, InstanceType } from 'typegoose';
 
-import User from '@models/User';
-import Board from '@models/Board';
+import User from '@/models/User';
+import Board from '@/models/Board';
 
 export default class List extends Typegoose {
   @prop({ required: true })

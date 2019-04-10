@@ -12,13 +12,7 @@
       ],
       "baseUrl": "./src",
       "paths": {
-         "@/*": ["*"],
-         "@api/*": ["api/*"],
-         "@models": ["models"],
-         "@models/*": ["models/*"],
-         "@utils/*": ["utils/*"],
-         "@config": ["config"],
-         "@config/*": ["config/*"]
+         "@/*": ["*"]
       }
    },
    "exclude": [

@@ -3,13 +3,9 @@ import * as bodyParser from 'body-parser';
 import * as cors from 'cors';
 import * as gracefulShutdown from 'http-graceful-shutdown';
 
-import { PORT } from '@config';
+import { PORT } from '@/config';
 
-import user from '@api/user';
-import card from '@api/card';
-import board from '@api/board';
-import list from '@api/list';
-import comment from '@api/comment';
+import { board, card, comment, list, user } from '@/api';
 
 const app = express();
 app.use(cors());
