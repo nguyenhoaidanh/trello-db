@@ -4,20 +4,22 @@
       "emitDecoratorMetadata": true,
       "moduleResolution": "node",
       "allowJs": true,
-      /* Basic Options */
-      "target": "es6", /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', or 'ESNEXT'. */
-      "module": "commonjs", /* Specify module code generation: 'commonjs', 'amd', 'system', 'umd' or 'es2015'. */
+      "target": "es6",
+      "module": "commonjs",
       "lib": [
          "es6",
          "dom"
       ],
-	  "rootDir": "./",
+      "baseUrl": "./src",
+      "paths": {
+         "@/*": ["*"]
+      }
    },
    "exclude": [
       "node_modules"
    ],
    "include": [
-      "db/**/*"
+      "src/**/*"
    ]
    
 }
