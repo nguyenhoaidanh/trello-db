@@ -21,47 +21,7 @@
 +show all comment in db:
     endpoint: /comments
     method: GET
-
-==============DELETE 1 BY NAME : xóa vậy test cho nhanh ===============   
-+delete 1 user by name:
-    endpoint: /users/delete/:username
-    method: GET
-
-+delete 1 board by name:
-    endpoint: /boards/delete/:boardname
-    method: GET
-
-+delete 1 list by name:
-    endpoint: /lists/delete/:listname
-    method: GET
-
-+delete 1 card by name:
-    endpoint: /cards/delete/:cardname
-    method: GET
-
-============DELETE ALL in DB : xóa vậy test cho nhanh=================
-+delete all user:
-    endpoint: /users/delete-all
-    method: GET
-
-+delete all board:
-    endpoint: /boards/delete-all
-    method: GET
-
-+delete all list:
-    endpoint: /lists/delete-all
-    method: GET
-
-+delete all card:
-    endpoint: /cards/delete-all
-    method: GET
-
-+delete all comment:
-    endpoint: /comments/delete-all
-    method: GET
 ==================================
-
-
 
 
 ############### API offical  ################
@@ -96,6 +56,11 @@
     endpoint: /users/:_id
     method: GET
 
++ delete user by _id :
+    endpoint: /users/:_id
+    params: _id
+    method: DELETE
+
 ############### api board 
 + add new board
     endpoint: /boards/add
@@ -107,9 +72,9 @@
         background:  không bắt buộc, có thì bỏ vô, không thì đừng bỏ vô body 
      
 + delete board by _id :
-    endpoint: /boards/delete
-    body: _id
-    method: POST
+    endpoint: /boards/:_id
+    params: _id
+    method: DELETE
 
 +edit board:   just edit : name, modeView, background 
     endpoint: /boards/edit
@@ -147,9 +112,9 @@
         field nào không thay đổi đừng bỏ vô body
 
 + delete list by _id
-    endpoint: /lists/delete
-    body: _id
-    method : POST
+    endpoint: /lists/:_id
+    params: _id
+    method : DELETE
    
 + get 1 list by _id
     endpoint: /lists/:_id
@@ -197,9 +162,9 @@
     note: memberName : 1 username
 
 + delete card by _id
-    endpoint: /cards/delete
-    body: _id
-    method : POST
+    endpoint: /cards/:_id
+    params: _id
+    method : DELETE
 
 + move card to other list
     endpoint: /cards/move
@@ -229,9 +194,9 @@
         ....
  
 + delete comment by _id
-    endpoint: /comments/delete
-    body: _id
-    method : POST
+    endpoint: /comments/:_id
+    params: _id
+    method : DELETE
 
 + get 1 comment by _id
     endpoint: /comments/:_id

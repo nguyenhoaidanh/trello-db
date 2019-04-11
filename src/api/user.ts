@@ -13,23 +13,6 @@ router.get('/', (req, res) => {
     res.send(user);
   })();
 });
-
-// api delete by name, just for test
-router.get('/delete/:username', (req, res) => {
-  var { username } = req.params;
-  (async () => {
-    const user = await UserModel.deleteOne({ username: username });
-    res.send({ status: MESSAGE.DELETE_USER_OK, user });
-  })();
-});
-
-// api delete all user
-router.get('/delete-all', (req, res) => {
-  (async () => {
-    const user = await UserModel.remove({});
-    res.send({ status: MESSAGE.DELETE_USER_OK, user });
-  })();
-});
 //////////   end API for test  ////////
 
 //get user by id
@@ -40,6 +23,19 @@ router.get('/:_id', (req, res) => {
     res.send({ status: MESSAGE.QUERY_OK, user });
   })();
 });
+
+
+// api delete by _id
+router.delete('/:_id', (req, res) => {
+  var { _id } = req.params;
+  (async () => {
+    const user = await UserModel.deleteOne({ _id });
+    //also delete all board of this card
+    await BoardModel.deleteMany({ ownerId: _id });
+    res.send({ status: MESSAGE.DELETE_USER_OK, user });
+  })();
+});
+
 
 router.post('/login', (req, res) => {
   const { username, password } = req.body;

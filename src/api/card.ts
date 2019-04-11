@@ -4,10 +4,8 @@ import * as mongoose from 'mongoose';
 import * as MESSAGE from '@/utils/return_message';
 import {
   UserModel,
-  BoardModel,
   CardModel,
-  CommentModel,
-  ListModel
+  CommentModel
 } from '@/models';
 
 const router = express.Router();
@@ -19,23 +17,6 @@ router.get('/', (req, res) => {
   (async () => {
     const card = await CardModel.find({});
     res.send(card);
-  })();
-});
-
-// api delete all card
-router.get('/delete-all', (req, res) => {
-  (async () => {
-    const card = await CardModel.remove({});
-    res.send({ status: MESSAGE.DELETE_CARD_OK, card });
-  })();
-});
-
-// api delete by name
-router.get('/delete/cardname', (req, res) => {
-  var { cardname } = req.body;
-  (async () => {
-    const card = await CardModel.deleteOne({ cardname });
-    res.send({ status: MESSAGE.DELETE_CARD_OK, card });
   })();
 });
 //end API for test
@@ -50,8 +31,8 @@ router.get('/:_id', (req, res) => {
 });
 
 // api delete by _id
-router.post('/delete', (req, res) => {
-  var { _id } = req.body;
+router.delete('/:_id', (req, res) => {
+  var { _id } = req.params;
   (async () => {
     const card = await CardModel.deleteOne({ _id });
     //also delete all comment of this card

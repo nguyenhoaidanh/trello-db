@@ -17,28 +17,12 @@ var ObjectId = mongoose.Types.ObjectId;
 //show all board,just for test
 router.get('/', (req, res) => {
   (async () => {
-    const board = await BoardModel.find({}); //WHY NOT SHOW REF
+    const board = await BoardModel.find({}); 
     res.send(board);
-  })();
-});
-
-// api delete all board
-router.get('/delete-all', (req, res) => {
-  (async () => {
-    const board = await BoardModel.remove({});
-    res.send(board);
-  })();
-});
-
-//api del by name
-router.get('/delete/:boardname', (req, res) => {
-  var { boardname } = req.params;
-  (async () => {
-    const board = await BoardModel.deleteOne({ name: boardname });
-    res.send({ status: MESSAGE.DELETE_BOARD_OK, board });
   })();
 });
 //end API for test ///////////////////////////////
+
 
 //get board by id
 router.get('/:_id', (req, res) => {
@@ -50,8 +34,8 @@ router.get('/:_id', (req, res) => {
 });
 
 // api delete by _id
-router.post('/delete', (req, res) => {
-  var { _id } = req.body;
+router.delete('/:_id', (req, res) => {
+  var { _id } = req.params;
   (async () => {
     const board = await BoardModel.deleteOne({ _id });
     await ListModel.deleteMany({ boardId: _id });

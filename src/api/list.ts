@@ -1,11 +1,9 @@
 import * as express from 'express';
-import * as mongoose from 'mongoose';
 
 import * as MESSAGE from '@/utils/return_message';
-import { BoardModel, CardModel, ListModel, UserModel } from '@/models';
+import {  CardModel, ListModel } from '@/models';
 
 const router = express.Router();
-var ObjectId = mongoose.Types.ObjectId;
 
 // API for testing
 //show all list,just for test
@@ -13,26 +11,6 @@ router.get('/', (req, res) => {
   (async () => {
     const list = await ListModel.find({}); //WHY NOT SHOW REF
     res.send(list);
-  })();
-});
-
-// api delete all board
-router.get('/delete-all', (req, res) => {
-  (async () => {
-    const list = await ListModel.remove({});
-    res.send(list);
-  })();
-});
-
-// api delete by name
-router.get('/delete/:listname', (req, res) => {
-  var { listname } = req.params;
-  (async () => {
-    const list = await ListModel.deleteOne({ name: listname });
-    res.send({
-      status: MESSAGE.DELETE_LIST_OK,
-      list
-    });
   })();
 });
 //end API for test ///////////////////////////////
@@ -47,8 +25,8 @@ router.get('/:_id', (req, res) => {
 });
 
 // api delete by id
-router.post('/delete', (req, res) => {
-  var { _id } = req.body;
+router.delete('/:_id', (req, res) => {
+  var { _id } = req.params;
   (async () => {
     const list = await ListModel.deleteOne({ _id });
     await CardModel.deleteMany({ listId: _id });

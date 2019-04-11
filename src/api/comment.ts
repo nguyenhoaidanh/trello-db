@@ -13,14 +13,6 @@ router.get('/', (req, res) => {
     res.send(comment);
   })();
 });
-// api delete all comment
-router.get('/delete-all', (req, res) => {
-  (async () => {
-    const comment = await CommentModel.remove({});
-    res.send({ status: MESSAGE.DELETE_COMMENT_OK });
-  })();
-});
-
 //end API for test ///////////////////////////////
 
 //get comment by id
@@ -33,8 +25,8 @@ router.get('/:_id', (req, res) => {
 });
 
 // api delete by _id
-router.post('/delete', (req, res) => {
-  var { _id } = req.body;
+router.delete('/:_id', (req, res) => {
+  var { _id } = req.params;
   (async () => {
     const comment = await CommentModel.deleteOne({ _id });
     res.send({
