@@ -7,6 +7,9 @@ export default class User extends Typegoose {
   @prop({ required: true })
   password: string;
 
+  @prop({ required: true })
+  email: string;
+
   @prop({ required: true, default: Date.now() })
   dateCreate: Date;
 

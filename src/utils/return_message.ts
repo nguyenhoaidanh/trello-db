@@ -1,8 +1,9 @@
 export const LOGIN_OK = 'login ok';
 export const REGISTER_OK = 'register ok';
 export const UPDATE_USER_OK = 'update ok';
-export const USER_EXIST = 'username is already exist';
+export const USER_EXIST = 'username or email is already exist';
 export const USER_INCORRECT = 'username or password incorrect';
+export const EMAIL_INCORRECT = 'email is not in system';
 export const DELETE_USER_OK = 'delete user ok';
 export const CHANGE_PASS_OK = 'change pass ok';
 
@@ -25,6 +26,9 @@ export const DELETE_COMMENT_OK = 'delete comment ok';
 
 export const ADD_MEMBER_OK = 'add member ok';
 export const DELETE_MEMBER_OK = 'delete member ok';
+
+export const ADD_LOG_OK = 'add log ok';
+export const DELETE_LOG_OK = 'delete log ok';
 
 export const NOT_FOUND = 'not found some thing';
 export const QUERY_OK = 'query ok';

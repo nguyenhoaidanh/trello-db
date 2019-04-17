@@ -38,5 +38,8 @@ export default class Card extends Typegoose {
   comments: Object[];
 
   @prop({ default: [] })
+  logs: Object[];
+
+  @prop({ default: [] })
   fileUrl: String[];
 }

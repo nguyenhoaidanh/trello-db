@@ -5,7 +5,8 @@ import * as MESSAGE from '@/utils/return_message';
 import {
   UserModel,
   CardModel,
-  CommentModel
+  CommentModel,
+  LogCardModel
 } from '@/models';
 
 const router = express.Router();
@@ -37,6 +38,7 @@ router.delete('/:_id', (req, res) => {
     const card = await CardModel.deleteOne({ _id });
     //also delete all comment of this card
     await CommentModel.deleteMany({ cardId: _id });
+    await LogCardModel.deleteMany({ cardId: _id });
     res.send({ status: MESSAGE.DELETE_CARD_OK, card });
   })();
 });
@@ -59,7 +61,7 @@ router.post('/add', (req, res) => {
       ownerId,
       listId,
       deadline,
-      description,
+      description, order,
       label,
       fileUrl
     });
@@ -74,6 +76,11 @@ router.post('/add', (req, res) => {
         );
       }
     card = await CardModel.findOne({ _id: card._id });
+    //add to log
+    var action = ' created card';
+    const l = new LogCardModel({ action, cardId: card._id, ownerId });
+    await l.save();
+    //
     res.send({
       status: MESSAGE.ADD_CARD_OK,
       card
@@ -137,11 +144,12 @@ router.post('/add-member', (req, res) => {
     );
     const card = await CardModel.findOne({ _id });
     if (card === null) res.send({ status: MESSAGE.NOT_FOUND });
-    else
+    else {
       res.send({
         status: MESSAGE.ADD_MEMBER_OK,
         card
       });
+    }
   })();
 });
 
@@ -181,7 +189,7 @@ router.post('/move', (req, res) => {
   })();
 });
 
-//query get all comment of card by id card
+//query get all comment,logs of card by id card
 router.get('/:_id/comments', (req, res) => {
   var { _id } = req.params;
   (async () => {
@@ -194,6 +202,12 @@ router.get('/:_id/comments', (req, res) => {
       .populate('ownerId', 'username imageUrl')
       .sort({ dateCreate: -1 });
     thisCard.comments = comments;
+
+    var logCards = await LogCardModel.find({ cardId: _id })
+      .populate('ownerId', 'username imageUrl')
+      .sort({ dateCreate: -1 });
+    thisCard.logs = logCards;
+
     var members = [];
     for (let m of thisCard.members) {
       let t = await UserModel.find({ _id: m }, { username: 1, imageUrl: 1 });

@@ -1,7 +1,7 @@
 import * as express from 'express';
 
 import * as MESSAGE from '@/utils/return_message';
-import { UserModel, BoardModel } from '@/models';
+import { UserModel, BoardModel,LogModel } from '@/models';
 
 const router = express.Router();
 
@@ -32,6 +32,11 @@ router.delete('/:_id', (req, res) => {
     const user = await UserModel.deleteOne({ _id });
     //also delete all board of this card
     await BoardModel.deleteMany({ ownerId: _id });
+    //add to log
+    var action=' deleted account'
+    const l = new LogModel({ action,ownerId:_id });
+    await l.save();
+    //
     res.send({ status: MESSAGE.DELETE_USER_OK, user });
   })();
 });
@@ -54,16 +59,22 @@ router.post('/login', (req, res) => {
 });
 
 router.post('/register', (req, res) => {
-  const { username, password, role, imageUrl } = req.body;
+  const { username, password, role, imageUrl,email } = req.body;
   (async () => {
     var existUser = await UserModel.findOne({ username });
-    if (existUser !== null)
+    var existUser1 = await UserModel.findOne({ email });
+    if (existUser !== null || existUser1!== null)
       res.send({
         status: MESSAGE.USER_EXIST
       });
     else {
-      const u = new UserModel({ username, password, imageUrl });
+      const u = new UserModel({ username, password, imageUrl,email });
       var user = await u.save();
+      //add to log
+      var action=' created account'
+      const l = new LogModel({ action,ownerId:user._id });
+      await l.save();
+      //
       user['password'] = null; //don't send pass
       res.send({
         status: MESSAGE.REGISTER_OK,
@@ -85,6 +96,28 @@ router.post('/change-pass', (req, res) => {
       const user = await UserModel.update(
         { username },
         { $set: { password: newPassword } }
+      );
+      res.send({
+        status: MESSAGE.CHANGE_PASS_OK,
+        user
+      });
+    }
+  })();
+});
+
+
+router.post('/reset-pass', (req, res) => {
+  const { email,password } = req.body;
+  (async () => {
+    var existUser = await UserModel.findOne({ email });
+    if (existUser === null )
+      res.send({
+        status: MESSAGE.EMAIL_INCORRECT
+      });
+    else {
+      const user = await UserModel.update(
+        { email },
+        { $set: { password: password } }
       );
       res.send({
         status: MESSAGE.CHANGE_PASS_OK,

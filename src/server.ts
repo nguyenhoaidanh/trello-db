@@ -5,7 +5,7 @@ import * as gracefulShutdown from 'http-graceful-shutdown';
 
 import { PORT } from '@/config';
 
-import { board, card, comment, list, user } from '@/api';
+import { board, card, comment, list, user,log,logCard } from '@/api';
 
 const app = express();
 app.use(cors());
@@ -25,6 +25,8 @@ app.use('/api/cards', card);
 app.use('/api/boards', board);
 app.use('/api/lists', list);
 app.use('/api/comments', comment);
+app.use('/api/logCards', logCard);
+app.use('/api/logs', log);
 
 // error handler
 app.use((err, req, res, next) => {

@@ -21,6 +21,15 @@
 +show all comment in db:
     endpoint: /comments
     method: GET
+
++show all logCard in db:
+    endpoint: /logCards
+    method: GET
+
++show all log in db:
+    endpoint: /logs
+    method: GET
+#Note: logCard là log của từng cái card, log là log của cả hệ thống
 ==================================
 
 
@@ -34,13 +43,18 @@
 
 +register:    
     endpoint: /users/register
-    body: username, password, role='user' || 'admin' , imageUrl 
+    body: username,email, password, role='user' || 'admin' , imageUrl 
     method: POST
     note: role & imageUrl : không bắt buộc, cái nào có thì bỏ vô, không thì đừng bỏ vô body 
 
 +change password:    
     endpoint: /users/change-pass
     body: username, password, newPassword 
+    method: POST
+
++reset password:    
+    endpoint: /users/reset-pass
+    body: email, password 
     method: POST
 
 +update info user:     just for: role , imageUrl
@@ -201,6 +215,38 @@
 + get 1 comment by _id
     endpoint: /comments/:_id
     method: GET   
+#########   api logs  ############
++add log :
+    endpoint: /logs/add
+    body: action,object,ownerId
+    method : POST
+    note: object -> không bắt buộc, object có thể là card, board, mọi thực thể trong db
+
++ delete log by _id
+    endpoint: /logs/:_id
+    params: _id
+    method : DELETE
+
++ get 1 log by _id
+    endpoint: /logs/:_id
+    method: GET   
+
+#########   api logCard  ############
++add logCard :
+    endpoint: /logCards/add
+    body:  action,cardId,ownerId
+    method : POST
+    note:  action,cardId,ownerId bắt buộc
+
++ delete logCard by _id
+    endpoint: /logCards/:_id
+    params: _id
+    method : DELETE
+
++ get 1 logCard by _id
+    endpoint: /logCards/:_id
+    method: GET  
+
 
 #########   api query  ############
 
@@ -214,7 +260,7 @@ get all list of board by boardid :
     body: _id
     method : GET
 
-get all comment of card by cardid :
+get all comment,logCards of card by cardid :
     endpoint: cards/:_id/comments
     body: _id
     method : GET
