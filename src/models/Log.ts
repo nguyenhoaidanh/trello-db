@@ -1,4 +1,4 @@
-import { prop, Ref, Typegoose, ModelType, InstanceType } from 'typegoose';
+import { prop, Ref, Typegoose  } from 'typegoose';
 
 import User from '@/models/User';
 

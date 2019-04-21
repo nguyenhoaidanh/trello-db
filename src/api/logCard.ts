@@ -1,5 +1,4 @@
 import * as express from 'express';
-import * as mongoose from 'mongoose';
 
 import * as MESSAGE from '@/utils/return_message';
 import {
@@ -22,8 +21,12 @@ router.get('/', (req, res) => {
 router.get('/:_id', (req, res) => {
   const { _id } = req.params;
   (async () => {
-    const logCard = await LogCardModel.find({ _id });
-    res.send({ status: MESSAGE.QUERY_OK, logCard });
+    try {
+      const logCard = await LogCardModel.find({ _id });
+      res.send({ status: MESSAGE.QUERY_OK, logCard });
+    } catch (error) {
+      res.send({ status: error });
+    }
   })();
 });
 
@@ -31,24 +34,35 @@ router.get('/:_id', (req, res) => {
 router.delete('/:_id', (req, res) => {
   var { _id } = req.params;
   (async () => {
-    const logCard = await LogCardModel.deleteOne({ _id });
-    res.send({ status: MESSAGE.DELETE_LOG_OK, logCard });
+    try {
+      const logCard = await LogCardModel.deleteOne({ _id });
+      res.send({ status: MESSAGE.DELETE_LOG_OK, logCard });
+    } catch (error) {
+      res.send({ status: error });
+    }
+
   })();
 });
 
 router.post('/add', (req, res) => {
   var {
-    action,cardId,ownerId
+    action, cardId, ownerId
   } = req.body;
   (async () => {
-    const lc = new LogCardModel({
-      action,cardId,ownerId
-    });
-    var logCard = await lc.save();
-    res.send({
-      status: MESSAGE.ADD_LOG_OK,
-      logCard
-    });
+    try {
+      const lc = new LogCardModel({
+        action, cardId, ownerId
+      });
+      var logCard = await lc.save();
+      res.send({
+        status: MESSAGE.ADD_LOG_OK,
+        logCard
+      });
+    } catch (error) {
+      res.send({
+        status: error
+      });
+    }
   })();
 });
 

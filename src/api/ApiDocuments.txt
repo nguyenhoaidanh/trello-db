@@ -70,6 +70,11 @@
     endpoint: /users/:_id
     method: GET
 
++ get all username, avatar
+    endpoint: /users/usernames
+    method: GET
+    note: sử dụng khi sệt tên để gợi ý thêm member
+
 + delete user by _id :
     endpoint: /users/:_id
     params: _id
@@ -88,14 +93,21 @@
 + delete board by _id :
     endpoint: /boards/:_id
     params: _id
+    body: ownerId     
     method: DELETE
+    note: 
+        chỉ owner mới được xóa
+        ownerId: id nguoi thuc hien delete
+
 
 +edit board:   just edit : name, modeView, background 
     endpoint: /boards/edit
-    body: _id, name, modeView, background 
+    body: _id, name, modeView, background , ownerId
     method: POST
     note: 
         field nào không thay đổi đừng bỏ vô body
+        chỉ owner mới được edit
+        ownerId: id nguoi thuc hien edit
         
 +add members to board:
     endpoint: /boards/add-member
@@ -152,7 +164,7 @@
 
 + edit card :  
     endpoint: /cards/edit
-    body: _id, title, deadline, description, label,order, archived, fileUrl
+    body: _id, title, deadline, description, label,order, archived, fileUrl, idUserEdit
     method : POST
     note:
         field nào ko thay đổi => đừng bỏ vô body
@@ -161,30 +173,35 @@
         archived :bool
         fileUrl: list string
         deadline: string fomat 'dd-mm-yyyy'
+        idUserEdit: id người chỉnh sửa, ai sửa cũng được ?
         ....
         
 +add a members to card:
     endpoint: /cards/add-member
-    body: _id, newMemberName 
+    body: _id, newMemberName , idUserAdd
     method : POST
     newMemberName : 1 username	
+    idUserAdd: id người thực hiện add
 
 +remove a members from card:
     endpoint: /cards/remove-member
-    body: _id, memberName 
+    body: _id, memberName ,idUserRemove
     method : POST
     note: memberName : 1 username
+    idUserAdd: id người thực hiện remove
 
 + delete card by _id
     endpoint: /cards/:_id
     params: _id
+    body: idUserRemove
     method : DELETE
+    note: idUserRemove là id người xóa. chỉ owner mới được xóa
 
 + move card to other list
     endpoint: /cards/move
-    body: _id, newListId
+    body: _id, newListId,idUserMove 
     method : POST
-     
+    idUserMove: id user thực hiện move card
  + get 1 card by _id
     endpoint: /cards/:_id
     method: GET 
@@ -200,18 +217,19 @@
 
 + edit comment :  
     endpoint: /comments/edit
-    body: _id, content, fileUrl
+    body: _id, content, fileUrl, idUserEdit
     method : POST
     note:
         field nào ko thay đổi  => don't push to body
         update content => chỉ bỏ content vô body
-        ....
+        idUserEdit: id người edit comment, chỉ owner mới được edit
  
 + delete comment by _id
     endpoint: /comments/:_id
     params: _id
+    body: idUserRemove
     method : DELETE
-
+    note: idUserRemove là id người thực hiện remove comment, chỉ owner của comment mới được xóa comment
 + get 1 comment by _id
     endpoint: /comments/:_id
     method: GET   

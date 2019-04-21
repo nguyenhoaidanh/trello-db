@@ -1,5 +1,4 @@
 import * as express from 'express';
-import * as mongoose from 'mongoose';
 
 import * as MESSAGE from '@/utils/return_message';
 import {
@@ -22,8 +21,13 @@ router.get('/', (req, res) => {
 router.get('/:_id', (req, res) => {
   const { _id } = req.params;
   (async () => {
-    const log = await LogModel.find({ _id });
-    res.send({ status: MESSAGE.QUERY_OK, log });
+    try {
+      const log = await LogModel.find({ _id });
+      if (!log) res.send({ status: MESSAGE.NOT_FOUND });
+      else res.send({ status: MESSAGE.QUERY_OK, log });
+    } catch (error) {
+      res.send({ status: error });
+    }
   })();
 });
 
@@ -31,24 +35,34 @@ router.get('/:_id', (req, res) => {
 router.delete('/:_id', (req, res) => {
   var { _id } = req.params;
   (async () => {
-    const log = await LogModel.deleteOne({ _id });
-    res.send({ status: MESSAGE.DELETE_LOG_OK, log });
+    try {
+      const log = await LogModel.deleteOne({ _id });
+      res.send({ status: MESSAGE.DELETE_LOG_OK, log });
+    } catch (error) {
+      res.send({ status: error });
+    }
   })();
 });
 
 router.post('/add', (req, res) => {
   var {
-    action,object,ownerId
+    action, object, ownerId
   } = req.body;
   (async () => {
-    const l = new LogModel({
-      action,object,ownerId
-    });
-    var log = await l.save();
-    res.send({
-      status: MESSAGE.ADD_LOG_OK,
-      log
-    });
+    try {
+      const l = new LogModel({
+        action, object, ownerId
+      });
+      var log = await l.save();
+      res.send({
+        status: MESSAGE.ADD_LOG_OK,
+        log
+      });
+    } catch (error) {
+      res.send({
+        status: error
+      });
+    }
   })();
 });
 

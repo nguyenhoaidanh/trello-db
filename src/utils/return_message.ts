@@ -34,3 +34,5 @@ export const NOT_FOUND = 'not found some thing';
 export const QUERY_OK = 'query ok';
 
 export const ERROR = 'error';
+export const NOT_PERMITION = 'you are not allowed to do this action';
+

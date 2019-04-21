@@ -16,6 +16,6 @@ export default class Comment extends Typegoose {
   @prop({ required: true, default: Date.now() })
   dateCreate: Date;
 
-  @prop({ required: true })
+  @prop({  })
   fileUrl: string;
 }
