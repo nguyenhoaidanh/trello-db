@@ -5,5 +5,6 @@ import { default as list } from '@/api/list';
 import { default as user } from '@/api/user';
 import { default as logCard } from '@/api/logCard';
 import { default as log } from '@/api/log';
+import { default as auth } from '@/api/auth';
 
-export { board, card, comment, list, user ,logCard,log};
+export { board, card, comment, list, user ,logCard,log ,auth};

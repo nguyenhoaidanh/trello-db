@@ -13,8 +13,8 @@ export default class Comment extends Typegoose {
   @prop({ ref: Card, required: true })
   cardId: Ref<Card>;
 
-  @prop({ required: true, default: Date.now() })
-  dateCreate: Date;
+  @prop({  default: Date.now() })
+  dateCreated: Date;
 
   @prop({  })
   fileUrl: string;

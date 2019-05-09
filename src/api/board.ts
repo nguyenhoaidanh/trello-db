@@ -8,7 +8,7 @@ import {
   CommentModel,
   ListModel,
   UserModel,
-  LogModel
+  LogModel,LogCardModel
 } from '@/models';
 
 const router = express.Router();
@@ -185,30 +185,21 @@ router.get('/:_id/lists', (req, res) => {
   var { _id } = req.params;
   (async () => {
     try {
-      var thisBoard = await BoardModel.find({ _id });
-      thisBoard = thisBoard[0];
-      var members = await UserModel.find(
-        { _id: { $in: thisBoard.members } },
-        { username: 1, imageUrl: 1 }
-      );
-      thisBoard.members = members;
-      var lists = await ListModel.find({ boardId: _id }).sort({ dateCreate: 1 });
+      var lists = await ListModel.find({ boardId: _id }).sort({ dateCreated: 1 });
       for (let l of lists) {
-        var cards = await CardModel.find({ listId: l._id })
-          .populate('ownerId', 'username imageUrl')
+        var cards = await CardModel.find({ listId: l._id },{archived:1,order:1,title:1,ownerId:1,members:1,labels:1 }) 
           .sort({ order: 1 });
         for (let c of cards) {
           var comments = await CommentModel.find({ cardId: c._id }, { _id: 1 });
           var t = [];
           for (let x of comments) t.push(x._id);
-          c.comments = t;
+          c.comments = t; 
         }
-        l.cards = cards;
+        l.cards = cards; 
       }
-      thisBoard.lists = lists;
       res.send({
         status: MESSAGE.QUERY_OK,
-        thisBoard
+        lists
       });
     } catch (error) {
       res.send({

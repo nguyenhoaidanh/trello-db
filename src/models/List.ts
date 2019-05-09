@@ -17,7 +17,7 @@ export default class List extends Typegoose {
   boardId: Ref<Board>;
 
   @prop({ required: true, default: Date.now() })
-  dateCreate: Date;
+  dateCreated: Date;
 
   @prop({ default: [] })
   cards: Object[];

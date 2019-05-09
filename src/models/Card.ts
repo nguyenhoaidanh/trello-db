@@ -17,18 +17,18 @@ export default class Card extends Typegoose {
   listId: Ref<List>;
 
   @prop({ required: true, default: Date.now() })
-  dateCreate: Date;
+  dateCreated: Date;
 
-  @prop({ required: true })
+  @prop({  })
   deadline: Date;
 
-  @prop({ required: true })
+  @prop({})
   description: string;
 
-  @prop({ required: true })
-  label: string;
+  @prop({ default: [] })
+  labels: object[];
 
-  @prop({ required: true, default: 0 })
+  @prop({ required: true  })
   order: number;
 
   @prop({ required: true, default: [] })

@@ -74,8 +74,9 @@ router.post('/login', (req, res) => {
   const { username, password } = req.body;
   (async () => {
     try {
+     
       const user = await UserModel.findOne({ username });
-      if (username === user.username && password === user.password) {
+      if (user!=null && username === user.username && password === user.password) {
         user['password'] = null;
         res.send({
           status: MESSAGE.LOGIN_OK,
@@ -208,15 +209,21 @@ router.post('/edit', (req, res) => {
   })();
 });
 
-//get all board of user with id=_id
+//get all board of user with id=_id || or borad user is member of
 router.get('/:_id/boards', (req, res) => {
   var { _id } = req.params;
   (async () => {
     try {
-      var boards = await BoardModel.find(
-        { ownerId: _id },
-        { name: 1, background: 1 }
-      );
+      var boards=[];
+      var allBoards = await BoardModel.find({});
+      for(var x of allBoards)
+      {
+        if(x.ownerId==_id){boards.push(x); continue}
+        for(var y of x.members)
+        {
+          if(_id==y._id)boards.push(x);
+        }
+      }
       res.send({
         status: MESSAGE.QUERY_OK,
         boards

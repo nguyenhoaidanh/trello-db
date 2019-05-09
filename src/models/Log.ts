@@ -13,5 +13,5 @@ export default class Log extends Typegoose {
   ownerId: Ref<User>;
 
   @prop({ required: true, default: Date.now() })
-  dateCreate: Date;
+  dateCreated: Date;
 }

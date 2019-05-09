@@ -32,7 +32,7 @@ router.get('/:_id', (req, res) => {
 // api delete by _id
 router.delete('/:_id', (req, res) => {
   var { _id } = req.params;
-  var {idUserRemove}=req.body;
+  var { idUserRemove } = req.body;
   (async () => {
     try {
       var personRemove = UserModel.findOne({ _id: idUserRemove });
@@ -58,18 +58,21 @@ router.post('/add', (req, res) => {
   var { content, ownerId, cardId, fileUrl } = req.body;
   (async () => {
     try {
-      var obj = {};
-      if (fileUrl !== null && fileUrl !== undefined) obj['fileUrl'] = fileUrl;
-      obj['content'] = content;
-      obj['ownerId'] = ownerId;
-      obj['cardId'] = cardId;
-      const c = new CommentModel(obj);
-      var comment = await c.save();
-      comment = await CommentModel.findOne({ _id: comment._id });
-      res.send({
-        status: MESSAGE.ADD_COMMENT_OK,
-        comment
-      });
+      if (!ownerId || !cardId) res.send({ status: MESSAGE.SOMETHING_REQUIRED });
+      else {
+        var obj = {};
+        if (fileUrl !== null && fileUrl !== undefined) obj['fileUrl'] = fileUrl;
+        obj['content'] = content;
+        obj['ownerId'] = ownerId;
+        obj['cardId'] = cardId;
+        const c = new CommentModel(obj);
+        var comment = await c.save();
+        comment = await CommentModel.findOne({ _id: comment._id });
+        res.send({
+          status: MESSAGE.ADD_COMMENT_OK,
+          comment
+        });
+      }
     } catch (error) {
       res.send({
         status: error

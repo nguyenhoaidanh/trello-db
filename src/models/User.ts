@@ -11,7 +11,7 @@ export default class User extends Typegoose {
   email: string;
 
   @prop({ required: true, default: Date.now() })
-  dateCreate: Date;
+  dateCreated: Date;
 
   @prop({ required: true, default: 'user' })
   role: string; //admin |  user

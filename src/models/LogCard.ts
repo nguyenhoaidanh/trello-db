@@ -14,5 +14,5 @@ export default class LogCard extends Typegoose {
   ownerId: Ref<User>;
 
   @prop({ required: true, default: Date.now() })
-  dateCreate: Date;
+  dateCreated: Date;
 }

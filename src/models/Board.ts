@@ -22,5 +22,5 @@ export default class Board extends Typegoose {
   lists: Object[];
 
   @prop({ required: true, default: Date.now() })
-  dateCreate: Date;
+  dateCreated: Date;
 }

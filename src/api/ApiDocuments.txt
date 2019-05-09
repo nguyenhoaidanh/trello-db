@@ -150,14 +150,14 @@
 
 +add card :
     endpoint: /cards/add
-    body:title, ownerId, listId, deadline, description, label, members ,order,fileUrl
+    body:title, ownerId, listId, deadline, description, labels, members ,order,fileUrl
     method : POST
     note:
         deadline: string fomat 'dd-mm-yyyy'
         members: : ['username1','username2']
-        label: string
+        labels: (ko bắt buộc) : là list cac object có dạng như sau [{labelColor:'red',labelText:'sometext'},...]
         members có thể là rỗng [], 
-	order không bắt buộc, default=0
+	    order không bắt buộc, default=totalcard+1, dbs tự thêm order.
         fileUrl : list String, ko bắt buộc
 	field còn lại bắt buộc
 	ko bắt buộc => nếu có thì bỏ vô body, ko thì đừng bỏ vô body
@@ -169,13 +169,21 @@
     note:
         field nào ko thay đổi => đừng bỏ vô body
         update name => only push name to body
-        label: string    (blue, red ,...)
+        label: 1 object có dạng như sau {labelColor:'red',labelText:'sometext'}
         archived :bool
         fileUrl: list string
         deadline: string fomat 'dd-mm-yyyy'
         idUserEdit: id người chỉnh sửa, ai sửa cũng được ?
         ....
-        
+
++ remove label card :  
+    endpoint: /cards/remove-label
+    body: _id, labelColor, idUserRemove
+    method : POST
+    note:
+        labelColor: 'red'    || 'blue'
+        idUserRemove: id người xóa, ai sửa cũng được ?
+        ....      
 +add a members to card:
     endpoint: /cards/add-member
     body: _id, newMemberName , idUserAdd
@@ -268,17 +276,23 @@
 
 #########   api query  ############
 
-get all board of user by userid :
+get all board of user by userid :    
     endpoint: users/:_id/boards
     body: _id
     method : GET
+    note: query tất cả board mà user đó đang là mem hoặc nó là chủ (cũng là mem :v)
 
 get all list of board by boardid :
     endpoint: boards/:_id/lists
     body: _id
     method : GET
 
-get all comment,logCards of card by cardid :
+get all comment of card by cardid :
     endpoint: cards/:_id/comments
+    body: _id
+    method : GET
+
+get all logCards of card by cardid :
+    endpoint: cards/:_id/logCards
     body: _id
     method : GET
