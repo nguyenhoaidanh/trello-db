@@ -11,13 +11,49 @@ import {
   LogModel
 } from '@/models';
 
-const router = express.Router();
-var ObjectId = mongoose.Types.ObjectId;
+const sampleToken = 'TOKEN IS HERE';
+const router = express.Router(); 
 
 router.get('/me', (req, res) => {
+  const { authorization: raw_token} = req.headers;
+  const id = raw_token.split('Bearer ')[1];
   (async () => {
-    const user = await UserModel.find({});
-    res.send(user);
+    try {
+      const user = await UserModel.findOne({_id:id});
+      res.send(
+        {
+          status: MESSAGE.QUERY_OK, user
+        }
+      );
+    } catch (error) {
+      res.send(
+        {
+          status: MESSAGE.ERROR, error
+        }
+      );
+    }
+  })();
+});
+
+router.post('/login', (req, res) => {
+  const { username, password } = req.body;
+  (async () => {
+    try {
+     
+      const user = await UserModel.findOne({ username });
+      if (user!=null && username === user.username && password === user.password) {
+        user['password'] = null;
+        res.send({
+          status: MESSAGE.LOGIN_OK,
+          user,
+          token: user._id
+        });
+      } else {
+        res.send({ status: MESSAGE.USER_INCORRECT });
+      }
+    } catch (error) {
+      res.send({ status: error });
+    }
   })();
 });
 
