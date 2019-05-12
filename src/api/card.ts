@@ -28,7 +28,14 @@ router.get('/:_id', (req, res) => {
   const { _id } = req.params;
   (async () => {
     try {
-      const card = await CardModel.find({ _id });
+      const card = await CardModel.findOne({ _id }); 
+      var mems=[]
+      for(var x of card.members)
+      {
+        var m=await UserModel.findOne({_id:x},{username:1,imageUrl:1}); 
+        mems.push(m);
+      }
+      card.members=mems;
       res.send({ status: MESSAGE.QUERY_OK, card });
     } catch (error) {
       res.send({ status: error });
