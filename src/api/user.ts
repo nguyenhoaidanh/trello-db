@@ -46,9 +46,9 @@ router.delete('/:_id', (req, res) => {
 router.get('/usernames', (req, res) => {
   (async () => {
     try {
-      const user = await UserModel.find({},{imageUrl:1,username:1});
+      const usernames = await UserModel.find({},{imageUrl:1,username:1});
       res.send(
-        { status: MESSAGE.QUERY_OK, user }
+        { status: MESSAGE.QUERY_OK, usernames }
       );
     } catch (error) {
       res.send({ status: error });

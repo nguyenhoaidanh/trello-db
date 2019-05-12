@@ -1,17 +1,11 @@
-import * as express from 'express';
-import * as mongoose from 'mongoose';
+import * as express from 'express'; 
 
 import * as MESSAGE from '@/utils/return_message';
 import {
-  BoardModel,
-  CardModel,
-  CommentModel,
-  ListModel,
-  UserModel,
-  LogModel
+  BoardModel, 
+  UserModel, 
 } from '@/models';
-
-const sampleToken = 'TOKEN IS HERE';
+ 
 const router = express.Router(); 
 
 router.get('/me', (req, res) => {

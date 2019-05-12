@@ -67,7 +67,7 @@ router.post('/add', (req, res) => {
         obj['cardId'] = cardId;
         const c = new CommentModel(obj);
         var comment = await c.save();
-        comment = await CommentModel.findOne({ _id: comment._id });
+        comment = await CommentModel.findOne({ _id: comment._id }).populate('ownerId', 'username imageUrl'); 
         res.send({
           status: MESSAGE.ADD_COMMENT_OK,
           comment
@@ -97,8 +97,8 @@ router.post('/edit', (req, res) => {
           //field which was modified will update, else not update
           if (content !== null && content !== undefined) obj['content'] = content;
           if (fileUrl !== null && fileUrl !== undefined) obj['fileUrl'] = fileUrl;
-          await CommentModel.update({ _id }, { $set: obj });
-          const comment = await CommentModel.findOne({ _id });
+          await CommentModel.updateOne({ _id }, { $set: obj });
+          const comment = await CommentModel.findOne({ _id }).populate('ownerId', 'username imageUrl'); 
           res.send({
             status: MESSAGE.EDIT_COMMENT_OK,
             comment

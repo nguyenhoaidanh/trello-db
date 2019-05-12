@@ -22,7 +22,7 @@ router.get('/:_id', (req, res) => {
   const { _id } = req.params;
   (async () => {
     try {
-      const logCard = await LogCardModel.find({ _id });
+      const logCard = await LogCardModel.find({ _id }).populate('ownerId', 'username imageUrl');
       res.send({ status: MESSAGE.QUERY_OK, logCard });
     } catch (error) {
       res.send({ status: error });

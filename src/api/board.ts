@@ -8,7 +8,7 @@ import {
   CommentModel,
   ListModel,
   UserModel,
-  LogModel,LogCardModel
+  LogModel
 } from '@/models';
 
 const router = express.Router();
@@ -52,7 +52,7 @@ router.delete('/:_id', (req, res) => {
         await BoardModel.deleteOne({ _id });
         await ListModel.deleteMany({ boardId: _id });
         //add to log
-        const l = new LogModel({ ownerId, action: 'Deleted board', object: board.name });
+        const l = new LogModel({ ownerId, action: 'đã xóa board', object: board.name });
         await l.save();
         //
         res.send({
@@ -85,7 +85,7 @@ router.post('/add', (req, res) => {
         }
       board = await BoardModel.findOne({ _id: board._id });
       //add to log
-      const l = new LogModel({ ownerId, action: 'Created board', object: board.name });
+      const l = new LogModel({ ownerId, action: 'đã tạo board', object: board.name });
       await l.save();
       //
       res.send({
@@ -119,7 +119,7 @@ router.post('/edit', (req, res) => {
       await BoardModel.update({ _id }, { $set: obj });
       const board = await BoardModel.findOne({ _id });
       //add to log
-      const l = new LogModel({ ownerId, action: 'Edited board', object: board.name });
+      const l = new LogModel({ ownerId, action: 'đã chỉnh sửa board', object: board.name });
       await l.save();
       //
       res.send({
