@@ -207,7 +207,7 @@
 
 + move card to other list
     endpoint: /cards/move
-    body: _id, newListId,idUserMove 
+    body: _id, newListId,idUserMove , order (order new of)
     method : POST
     idUserMove: id user thực hiện move card
  + get 1 card by _id

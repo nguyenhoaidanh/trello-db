@@ -28,14 +28,13 @@ router.get('/:_id', (req, res) => {
   const { _id } = req.params;
   (async () => {
     try {
-      const card = await CardModel.findOne({ _id }); 
-      var mems=[]
-      for(var x of card.members)
-      {
-        var m=await UserModel.findOne({_id:x},{username:1,imageUrl:1}); 
+      const card = await CardModel.findOne({ _id });
+      var mems = []
+      for (var x of card.members) {
+        var m = await UserModel.findOne({ _id: x }, { username: 1, imageUrl: 1 });
         mems.push(m);
       }
-      card.members=mems;
+      card.members = mems;
       res.send({ status: MESSAGE.QUERY_OK, card });
     } catch (error) {
       res.send({ status: error });
@@ -69,8 +68,8 @@ router.post('/add', (req, res) => {
   var { title, ownerId, listId, deadline, description, labels, members, fileUrl } = req.body;
   (async () => {
     try {
-      var totalCard=await CardModel.find({listId});
-      var order=totalCard.length+1; 
+      var totalCard = await CardModel.find({ listId });
+      var order = totalCard.length + 1;
       const c = new CardModel({
         title, ownerId, listId, deadline, description, order, labels, fileUrl
       });
@@ -133,7 +132,7 @@ router.post('/edit', (req, res) => {
         //
 
         var card = await CardModel.updateOne({ _id }, { $set: obj });
-        
+
         //add to log
         var action = 'đã chỉnh sửa card';
         const l = new LogCardModel({ action, cardId: card._id, ownerId: idUserEdit });
@@ -141,13 +140,12 @@ router.post('/edit', (req, res) => {
         //
         card = await CardModel.findOne({ _id });
         //get mem
-        var mems=[]
-        for(var x of card.members)
-        {
-          var m=await UserModel.findOne({_id:x},{username:1,imageUrl:1}); 
+        var mems = []
+        for (var x of card.members) {
+          var m = await UserModel.findOne({ _id: x }, { username: 1, imageUrl: 1 });
           mems.push(m);
-        } 
-        card.members=mems;
+        }
+        card.members = mems;
         res.send({ status: MESSAGE.EDIT_CARD_OK, card });
       }
     } catch (error) {
@@ -160,7 +158,7 @@ router.post('/edit', (req, res) => {
 
 //remove label
 router.post('/remove-label', (req, res) => {
-  var { _id, labelColor, idUserRemove  } = req.body;
+  var { _id, labelColor, idUserRemove } = req.body;
   (async () => {
     try {
       var obj = {};
@@ -175,10 +173,10 @@ router.post('/remove-label', (req, res) => {
             }
           }
           existCard.labels = tem;
-        } 
-        obj['labels'] = tem; 
+        }
+        obj['labels'] = tem;
         var card = await CardModel.updateOne({ _id }, { $set: obj });
-        
+
         //add to log
         var action = 'đã chỉnh sửa card';
         const l = new LogCardModel({ action, cardId: card._id, ownerId: idUserRemove });
@@ -186,13 +184,12 @@ router.post('/remove-label', (req, res) => {
         //
         card = await CardModel.findOne({ _id });
         //get member
-        var mems=[]
-        for(var x of card.members)
-        {
-          var m=await UserModel.findOne({_id:x},{username:1,imageUrl:1}); 
+        var mems = []
+        for (var x of card.members) {
+          var m = await UserModel.findOne({ _id: x }, { username: 1, imageUrl: 1 });
           mems.push(m);
         }
-        card.members=mems;
+        card.members = mems;
         res.send({ status: MESSAGE.EDIT_CARD_OK, card });
       }
     } catch (error) {
@@ -210,7 +207,7 @@ router.post('/add-member', (req, res) => { //add one member
   (async () => {
     try {
       const newMember = await UserModel.findOne({ username: newMemberName });
-      var card = await CardModel.findOne({ _id }); 
+      var card = await CardModel.findOne({ _id });
       if (card === null || newMember === null) res.send({ status: MESSAGE.NOT_FOUND });
       else {
         await CardModel.updateOne(
@@ -224,13 +221,12 @@ router.post('/add-member', (req, res) => { //add one member
         //
         card = await CardModel.findOne({ _id });
         //get member
-        var mems=[]
-        for(var x of card.members)
-        {
-          var m=await UserModel.findOne({_id:x},{username:1,imageUrl:1}); 
+        var mems = []
+        for (var x of card.members) {
+          var m = await UserModel.findOne({ _id: x }, { username: 1, imageUrl: 1 });
           mems.push(m);
         }
-        card.members=mems;
+        card.members = mems;
         res.send({ status: MESSAGE.ADD_MEMBER_OK, card });
       }
     } catch (error) {
@@ -255,13 +251,12 @@ router.post('/remove-member', (req, res) => { //remove one member
       );
       card = await CardModel.findOne({ _id });
       //get member
-      var mems=[]
-      for(var x of card.members)
-      {
-        var m=await UserModel.findOne({_id:x},{username:1,imageUrl:1}); 
+      var mems = []
+      for (var x of card.members) {
+        var m = await UserModel.findOne({ _id: x }, { username: 1, imageUrl: 1 });
         mems.push(m);
       }
-      card.members=mems;
+      card.members = mems;
       //add to log
       var action = `Đã xóa '${memberName}' khỏi card`;
       const l = new LogCardModel({ action, cardId: card._id, ownerId: idUserRemove });
@@ -281,30 +276,43 @@ router.post('/remove-member', (req, res) => { //remove one member
 
 // drag card to other list
 router.post('/move', (req, res) => {
-  var { _id, newListId, idUserMove ,order} = req.body;
+  var { _id, newListId, idUserMove, order } = req.body;
   (async () => {
     try {
       const personMove = await UserModel.findOne({ _id: idUserMove });
       var card = await CardModel.findOne({ _id });
-      const newList = await ListModel.findOne({ _id: newListId });
-      const oldList = await ListModel.findOne({ _id: card.listId });
 
+      // end update order
       if (!personMove || !card) res.send({ status: MESSAGE.NOT_FOUND });
       else {
+        const newList = await ListModel.findOne({ _id: newListId });
+        const oldList = await ListModel.findOne({ _id: card.listId });
+
+        // update order card of two list  
+        var oldCards = await CardModel.find({ listId: card.listId });
+        var newCards = await CardModel.find({ listId: newListId });
+
+        for (var x of oldCards) {
+          if (x.order > card.order)
+            await CardModel.updateOne({ _id: x._id }, { $set: { order: x.order - 1 } });
+        }
+        for (var x of newCards) {
+          if (x.order >= order)
+            await CardModel.updateOne({ _id: x._id }, { $set: { order: x.order + 1 } });
+        }
         var action = `${personMove.username} moved task "${card.title}" from ${oldList.name} to ${newList.name}`;
         await CardModel.updateOne(
           { _id },
-          { $set: { listId: new ObjectId(String(newListId)),order } }
+          { $set: { listId: new ObjectId(String(newListId)), order } }
         );
         card = await CardModel.findOne({ _id });
         //get member
-        var mems=[]
-        for(var x of card.members)
-        {
-          var m=await UserModel.findOne({_id:x},{username:1,imageUrl:1}); 
+        var mems = []
+        for (var x of card.members) {
+          var m = await UserModel.findOne({ _id: x }, { username: 1, imageUrl: 1 });
           mems.push(m);
         }
-        card.members=mems;
+        card.members = mems;
         //add to log
         const l = new LogCardModel({ action, cardId: card._id, ownerId: idUserMove });
         await l.save();
@@ -329,8 +337,7 @@ router.get('/:_id/comments', (req, res) => {
     try {
       var comments = await CommentModel.find({ cardId: _id })
         .populate('ownerId', 'username imageUrl')
-        .sort({ dateCreated: -1 });
-
+        .sort({ _id: -1 }); 
       res.send({
         status: MESSAGE.QUERY_OK,
         comments
@@ -350,7 +357,7 @@ router.get('/:_id/logCards', (req, res) => {
     try {
       var logCards = await LogCardModel.find({ cardId: _id })
         .populate('ownerId', 'username imageUrl')
-        .sort({ dateCreated: -1 });
+        .sort({ _id: -1 });
       res.send({
         status: MESSAGE.QUERY_OK,
         logCards

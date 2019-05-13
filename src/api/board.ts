@@ -185,7 +185,7 @@ router.get('/:_id/lists', (req, res) => {
   var { _id } = req.params;
   (async () => {
     try {
-      var lists = await ListModel.find({ boardId: _id }).sort({ dateCreated: 1 });
+      var lists = await ListModel.find({ boardId: _id }).sort({ _id: 1 });
       for (let l of lists) {
         var cards = await CardModel.find({ listId: l._id },{archived:1,order:1,title:1,ownerId:1,members:1,labels:1 }) 
           .sort({ order: 1 });
