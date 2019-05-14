@@ -291,15 +291,36 @@ router.post('/move', (req, res) => {
         // update order card of two list  
         var oldCards = await CardModel.find({ listId: card.listId });
         var newCards = await CardModel.find({ listId: newListId });
+        if (newListId === oldList._id) {  // list cu
+          if (order > card.order) // tu tren xuong duoi 
+          {
+            for (var x of oldCards) {
+              if (x.order > card.order && x.order <= order)
+                await CardModel.updateOne({ _id: x._id }, { $set: { order: x.order - 1 } });
+            }
+          }
+          else { // duoi len tren
 
-        for (var x of oldCards) {
-          if (x.order > card.order)
-            await CardModel.updateOne({ _id: x._id }, { $set: { order: x.order - 1 } });
+            for (var x of oldCards) {
+              if (x.order < card.order && x.order >= order)
+                await CardModel.updateOne({ _id: x._id }, { $set: { order: x.order + 1 } });
+            }
+          }
+
         }
-        for (var x of newCards) {
-          if (x.order >= order)
-            await CardModel.updateOne({ _id: x._id }, { $set: { order: x.order + 1 } });
+        else { // list moi
+          for (var x of oldCards) {
+            if (x.order > card.order)
+              await CardModel.updateOne({ _id: x._id }, { $set: { order: x.order - 1 } });
+          }
+          for (var x of newCards) {
+            if (x.order >= order)
+              await CardModel.updateOne({ _id: x._id }, { $set: { order: x.order + 1 } });
+          }
         }
+
+
+
         var action = `${personMove.username} moved task "${card.title}" from ${oldList.name} to ${newList.name}`;
         await CardModel.updateOne(
           { _id },
@@ -337,7 +358,7 @@ router.get('/:_id/comments', (req, res) => {
     try {
       var comments = await CommentModel.find({ cardId: _id })
         .populate('ownerId', 'username imageUrl')
-        .sort({ _id: -1 }); 
+        .sort({ _id: -1 });
       res.send({
         status: MESSAGE.QUERY_OK,
         comments
