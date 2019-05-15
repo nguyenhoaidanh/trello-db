@@ -106,7 +106,7 @@
     method: POST
     note: 
         field nào không thay đổi đừng bỏ vô body
-        chỉ owner mới được edit
+        chỉ owner hoặc member mới được edit
         ownerId: id nguoi thuc hien edit
         
 +add members to board:

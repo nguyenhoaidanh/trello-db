@@ -77,7 +77,7 @@ router.post('/edit', (req, res) => {
       if (name !== null && name !== undefined) obj['name'] = name;
       if (archived !== null && archived !== undefined)
         obj['archived'] = String(archived).toLowerCase() == 'true' ? true : false;
-      await ListModel.update({ _id }, { $set: obj });
+      await ListModel.updateOne({ _id }, { $set: obj });
       list = await ListModel.findOne({ _id });
       res.send({
         status: MESSAGE.EDIT_LIST_OK,

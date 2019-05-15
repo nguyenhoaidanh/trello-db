@@ -82,7 +82,7 @@ router.post('/change-pass', (req, res) => {
           status: MESSAGE.USER_INCORRECT
         });
       else {
-        const user = await UserModel.update(
+        const user = await UserModel.updateOne(
           { username },
           { $set: { password: newPassword } }
         );
@@ -110,7 +110,7 @@ router.post('/reset-pass', (req, res) => {
           status: MESSAGE.EMAIL_INCORRECT
         });
       else {
-        const user = await UserModel.update(
+        const user = await UserModel.updateOne(
           { email },
           { $set: { password: password } }
         );

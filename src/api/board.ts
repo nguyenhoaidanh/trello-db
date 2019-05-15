@@ -30,7 +30,14 @@ router.get('/:_id', (req, res) => {
   const { _id } = req.params;
   (async () => {
     try {
-      const board = await BoardModel.find({ _id });
+      const board = await BoardModel.findOne({ _id });
+      //get member
+      var mems = []
+      for (var x of board.members) {
+        var m = await UserModel.findOne({ _id: x }, { username: 1, imageUrl: 1 });
+        mems.push(m);
+      }
+      board.members = mems;
       res.send({ status: MESSAGE.QUERY_OK, board });
     } catch (error) {
       res.send({ status: error });
@@ -84,6 +91,13 @@ router.post('/add', (req, res) => {
           );
         }
       board = await BoardModel.findOne({ _id: board._id });
+      //get member
+      var mems = []
+      for (var x of board.members) {
+        var m = await UserModel.findOne({ _id: x }, { username: 1, imageUrl: 1 });
+        mems.push(m);
+      }
+      board.members = mems;
       //add to log
       const l = new LogModel({ ownerId, action: 'đã tạo board', object: board.name });
       await l.save();
@@ -103,29 +117,42 @@ router.post('/add', (req, res) => {
 //update info board: name, modeView, background
 router.post('/edit', (req, res) => {
   const { _id, name, modeView, background, ownerId } = req.body;
+  var permitted = false;
   (async () => {
     try {
       var existboard = await BoardModel.findOne({ _id });
-      if (String(existboard.ownerId) !== ownerId) res.send({ status: MESSAGE.NOT_PERMITION });
+      // check persion is in member or ownerId    
+      var mems = []
+      if (String(existboard.ownerId) === ownerId) permitted = true;
+      for (var x of existboard.members) {
+        var m = await UserModel.findOne({ _id: x }, { username: 1, imageUrl: 1 });
+        if (String(ownerId) === String(m._id)) { permitted = true; }
+        mems.push(m);
+      }
+
+      if (!permitted) res.send({ status: MESSAGE.NOT_PERMITION });
       else if (existboard === null) res.send({ status: MESSAGE.NOT_FOUND });
-      var obj = {};
-      if (name !== null && name !== undefined)
-        //field which was modified will update, else not update
-        obj['name'] = name;
-      if (modeView !== null && modeView !== undefined)
-        obj['modeView'] = String(modeView).toLowerCase() == 'true' ? true : false;
-      if (background !== null && background !== undefined)
-        obj['background'] = background;
-      await BoardModel.update({ _id }, { $set: obj });
-      const board = await BoardModel.findOne({ _id });
-      //add to log
-      const l = new LogModel({ ownerId, action: 'đã chỉnh sửa board', object: board.name });
-      await l.save();
-      //
-      res.send({
-        status: MESSAGE.EDIT_BOARD_OK,
-        board
-      });
+      else {
+        var obj = {};
+        if (name !== null && name !== undefined)
+          //field which was modified will update, else not update
+          obj['name'] = name;
+        if (modeView !== null && modeView !== undefined)
+          obj['modeView'] = String(modeView).toLowerCase() == 'true' ? true : false;
+        if (background !== null && background !== undefined)
+          obj['background'] = background;
+        await BoardModel.updateOne({ _id }, { $set: obj });
+        const board = await BoardModel.findOne({ _id });
+        board.members = mems;
+        //add to log
+        const l = new LogModel({ ownerId, action: 'đã chỉnh sửa board', object: board.name });
+        await l.save();
+        //
+        res.send({
+          status: MESSAGE.EDIT_BOARD_OK,
+          board
+        });
+      }
     } catch (error) {
       res.send({
         status: error
@@ -146,6 +173,13 @@ router.post('/add-member', (req, res) => {
         { $addToSet: { members: new ObjectId(String(newMember._id)) } }
       );
       const board = await BoardModel.findOne({ _id });
+      //get member
+      var mems = []
+      for (var x of board.members) {
+        var m = await UserModel.findOne({ _id: x }, { username: 1, imageUrl: 1 });
+        mems.push(m);
+      }
+      board.members = mems;
       res.send({
         status: MESSAGE.ADD_MEMBER_OK,
         board
@@ -168,6 +202,13 @@ router.post('/remove-member', (req, res) => {
         { $pull: { members: new ObjectId(String(Member._id)) } }
       );
       const board = await BoardModel.findOne({ _id });
+      //get member
+      var mems = []
+      for (var x of board.members) {
+        var m = await UserModel.findOne({ _id: x }, { username: 1, imageUrl: 1 });
+        mems.push(m);
+      }
+      board.members = mems;
       res.send({
         status: MESSAGE.DELETE_MEMBER_OK,
         board
@@ -187,15 +228,15 @@ router.get('/:_id/lists', (req, res) => {
     try {
       var lists = await ListModel.find({ boardId: _id }).sort({ _id: 1 });
       for (let l of lists) {
-        var cards = await CardModel.find({ listId: l._id },{archived:1,order:1,title:1,ownerId:1,members:1,labels:1 }) 
+        var cards = await CardModel.find({ listId: l._id }, { archived: 1, order: 1, title: 1, ownerId: 1, members: 1, labels: 1 })
           .sort({ order: 1 });
         for (let c of cards) {
           var comments = await CommentModel.find({ cardId: c._id }, { _id: 1 });
           var t = [];
           for (let x of comments) t.push(x._id);
-          c.comments = t; 
+          c.comments = t;
         }
-        l.cards = cards; 
+        l.cards = cards;
       }
       res.send({
         status: MESSAGE.QUERY_OK,
