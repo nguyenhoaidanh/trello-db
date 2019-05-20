@@ -15,8 +15,7 @@ let server;
     database = await connect_mongo();
     server = await start_server();
   } catch (err) {
-    // handle err
-    console.log(`${err}`);
+    console.log(`Error: ${err.message}`);
     process.exit(1);
   }
 })();
@@ -34,3 +33,13 @@ const onShutdown = async () => {
 
 process.on('SIGINT', onShutdown);
 process.on('SIGTERM', onShutdown);
+
+process
+  .on('unhandledRejection', (reason, p) => {
+    console.error(reason, 'Unhandled Rejection at Promise', p);
+  })
+  .on('uncaughtException', err => {
+    // console.error(err, 'Uncaught Exception thrown');
+    console.log(`Unhandled Exception thrown: ${err.message}`);
+    process.exit(2);
+  });
