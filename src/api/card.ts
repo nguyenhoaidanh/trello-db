@@ -69,7 +69,7 @@ router.post('/add', (req, res) => {
   (async () => {
     try {
       var totalCard = await CardModel.find({ listId });
-      var order = totalCard.length + 1;
+      var order = totalCard.length;
       const c = new CardModel({
         title, ownerId, listId, deadline, description, order, labels, fileUrl
       });
@@ -281,8 +281,7 @@ router.post('/move', (req, res) => {
     try {
       const personMove = await UserModel.findOne({ _id: idUserMove });
       var card = await CardModel.findOne({ _id });
-
-      // end update order
+ 
       if (!personMove || !card) res.send({ status: MESSAGE.NOT_FOUND });
       else {
         const newList = await ListModel.findOne({ _id: newListId });
@@ -291,21 +290,21 @@ router.post('/move', (req, res) => {
         // update order card of two list  
         var oldCards = await CardModel.find({ listId: card.listId });
         var newCards = await CardModel.find({ listId: newListId });
-        if (newListId === oldList._id) {  // list cu
-          if (order > card.order) // tu tren xuong duoi 
-          {
-            for (var x of oldCards) {
-              if (x.order > card.order && x.order <= order)
-                await CardModel.updateOne({ _id: x._id }, { $set: { order: x.order - 1 } });
-            }
+        if (String(newListId) === String(oldList._id)) {  // list cu
+          // xoa no ra khoi list cu, and thang nao order lon hon no ban dau => -1 
+          var tempor=oldCards.filter(e=>String(e._id)!=String(card._id));
+          for (var x of tempor) {
+            if(x.order>card.order)  x.order=x.order-1;
+          }  
+          for (var x of tempor) { // them no vao
+            if(x.order>=order)  x.order=x.order+1;
+          }    
+          // chen vao vi tri moi
+          for (var x of tempor) {    
+            await CardModel.updateOne({ _id: x._id }, { $set: { order: x.order  }}) ; 
           }
-          else { // duoi len tren
-
-            for (var x of oldCards) {
-              if (x.order < card.order && x.order >= order)
-                await CardModel.updateOne({ _id: x._id }, { $set: { order: x.order + 1 } });
-            }
-          }
+          // update chinh no
+          await CardModel.updateOne({ _id: card._id }, { $set: {  order }}) ;
 
         }
         else { // list moi
